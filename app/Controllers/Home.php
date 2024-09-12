@@ -114,6 +114,58 @@ class Home extends BaseController
         }
     }
 
+    public function upload($id)
+    {
+        $model = new AdminModel();
+        $data = [];  // Initialize data array
+        helper('form');
+
+        // Check if the request method is POST
+        if ($this->request->getMethod() === 'post') {
+            // Define validation rules
+            $validationRule = [
+                'userfile' => [
+                    'label' => 'Image File',
+                    'rules' => 'uploaded[userfile]|is_image[userfile]|mime_in[userfile,image/jpg,image/jpeg,image/png]|max_size[userfile,2048]',
+                ],
+            ];
+
+            // Validate the file input
+            if (!$this->validate($validationRule)) {
+                // If validation fails, add errors to the data array
+                $data['validation'] = $this->validator->getErrors();  // Collect validation errors
+            } else {
+                // If validation passes, handle the file upload
+                $file = $this->request->getFile('userfile');
+
+                // Check if the file is valid and has been uploaded without errors
+                if ($file->isValid() && !$file->hasMoved()) {
+                    try {
+                        // Move the file to a desired location, e.g., 'uploads' directory
+                        $fileName = $file->getRandomName();  // Generate a random name to avoid conflicts
+                        $file->move(WRITEPATH . 'uploads', $fileName);
+
+                        // Optionally, save the file path or other info to the database using the model
+                        // Example: $model->save(['id' => $id, 'file_path' => $fileName]);
+
+                        // Add success message to the data array
+                        $data['success'] = 'File uploaded successfully!';
+                    } catch (\Exception $e) {
+                        // Handle any exceptions that occur during the file move
+                        $data['error'] = 'Failed to upload the file: ' . $e->getMessage();
+                    }
+                } else {
+                    // Handle errors if the file is invalid or has moved already
+                    $data['error'] = 'Failed to upload the file.';
+                }
+            }
+        }
+
+        // Load the upload form view with any data, such as validation errors or success messages
+        return view('upload_form', $data);
+    }
+
+
 
     private function verifyMyPassword($enteredPassword, $databasedPassword)
     {

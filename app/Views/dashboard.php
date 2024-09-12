@@ -44,6 +44,7 @@ $data = session()->get();
                         <td>
                             <a href="<?= base_url() ?>editUser/<?= $user['id'] ?>" class="btn btn-warning">Edit</a>
                             <a onclick="return confirm('are you sure want to delete this user ? ')" href="<?= base_url() ?>deleteUser/<?= $user['id'] ?>" class="btn btn-danger">Delete</a>
+                            <a href="<?= base_url() ?>upload/<?= $user['id'] ?>" class="btn btn-info">Upload Image</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
