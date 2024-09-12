@@ -1,0 +1,10 @@
+.center_div {
+  margin: 0 auto;
+  float: none;
+  padding: 48px;
+  border: 1px dashed;
+}
+
+.martop {
+  margin-top: 41px;
+}
